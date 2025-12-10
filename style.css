@@ -200,8 +200,8 @@ section {
 
 /* Fix LeetCode icon size */
 .sci a.leetcode-icon svg {
-    width: 19px;
-    height: 19px;
+    width: 18px;
+    height: 18px;
 }
 
 .home-detail .btn-sci .sci a {
