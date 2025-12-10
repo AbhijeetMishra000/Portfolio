@@ -1,123 +1,108 @@
-const navLinks = document.querySelectorAll('header nav a');
-const logoLink = document.querySelector('.logo');
-const sections = document.querySelectorAll('section');
-const menuIcon = document.querySelector('#menu-icon');
-const navbar = document.querySelector('header nav');
+// SMOOTH SCROLL ACTIVE LINK
+const sections = document.querySelectorAll("section");
+const navLinks = document.querySelectorAll("header nav a");
 
-menuIcon.addEventListener('click', () => {
-    menuIcon.classList.toggle('bx-x');
-    navbar.classList.toggle('active');
-});
+function updateActiveLink() {
+    let current = "";
 
-const activePage = () => {
-    const header = document.querySelector('header');
-    const barsBox = document.querySelector('.bars-box');
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 200;
+        const sectionHeight = section.clientHeight;
+        const id = section.getAttribute("id");
 
-    header.classList.remove('active');
-    setTimeout(() => {
-        header.classList.add('active');
-    }, 1100);
-
-    navLinks.forEach(link =>{
-        link.classList.remove('active');
+        if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+            current = id;
+        }
     });
 
-    barsBox.classList.remove('active');
-    setTimeout(() => {
-        barsBox.classList.add('active');
-    }, 1100);
-
-    sections.forEach(section =>{
-        section.classList.remove('active');
+    navLinks.forEach(a => {
+        a.classList.remove("active");
+        if (a.getAttribute("href") === "#" + current) {
+            a.classList.add("active");
+        }
     });
-
-    menuIcon.classList.remove('bx-x');
-    navbar.classList.remove('active');
 }
 
+window.addEventListener("scroll", updateActiveLink);
+window.addEventListener("load", updateActiveLink);
 
-navLinks.forEach((link, idx)=> {
+
+// MOBILE MENU
+const menuIcon = document.querySelector("#menu-icon");
+const navbar = document.querySelector("header nav");
+
+if (menuIcon && navbar) {
+    menuIcon.addEventListener("click", () => {
+        menuIcon.classList.toggle("bx-x");
+        navbar.classList.toggle("active");
+    });
+}
+
+// Close mobile menu on link click
+navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        if (!link.classList.contains('active')) {
-            activePage();
-
-            link.classList.add('active');
-
-            setTimeout(() => {
-                sections[idx].classList.add('active');
-            }, 1100);
+        if (navbar.classList.contains('active')) {
+            navbar.classList.remove('active');
+            menuIcon.classList.remove('bx-x');
         }
     });
 });
 
-logoLink.addEventListener('click', () => {
-    if (!navLinks[0].classList.contains('active')) {
-        activePage();
 
-        navLinks[0].classList.add('active');
-
-        setTimeout(() => {
-            sections[0].classList.add('active');
-        }, 1100);
-    }
-});
-
+// RESUME TAB SWITCH
 const resumeBtns = document.querySelectorAll('.resume-btn');
 
-resumeBtns.forEach((btn, idx) => {
-    btn.addEventListener('click', () => {
-        const resumeDetails = document.querySelectorAll('.resume-detail')
+if (resumeBtns.length) {
+    resumeBtns.forEach((btn, idx) => {
+        btn.addEventListener('click', () => {
+            const resumeDetails = document.querySelectorAll('.resume-detail');
 
-        resumeBtns.forEach(btn => {
-            btn.classList.remove('active');
-        });
-        btn.classList.add('active');
+            resumeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-        resumeDetails.forEach(detail => {
-            detail.classList.remove('active');
+            resumeDetails.forEach(detail => detail.classList.remove('active'));
+            if (resumeDetails[idx]) resumeDetails[idx].classList.add('active');
         });
-        resumeDetails[idx].classList.add('active');
     });
-});
+}
 
+
+// PORTFOLIO SLIDER
 const arrowRight = document.querySelector('.portfolio-box .navigation .arrow-right');
 const arrowLeft = document.querySelector('.portfolio-box .navigation .arrow-left');
 
 let index = 0;
+const imgSlide = document.querySelector('.portfolio-carousel .img-slide');
+const portfolioDetails = document.querySelectorAll('.portfolio-detail');
 
-const activePortfolio = () => {
-    const imgSlide = document.querySelector('.portfolio-carousel .img-slide');
-    const portfolioDetails = document.querySelectorAll('.portfolio-detail');
-
+function activePortfolio() {
+    if (!imgSlide) return;
     imgSlide.style.transform = `translateX(calc(${index * -100}% - ${index * 2}rem))`;
-    portfolioDetails.forEach(detail => {
-        detail.classList.remove('active');
-    });
-    portfolioDetails[index].classList.add('active');
+    portfolioDetails.forEach(detail => detail.classList.remove('active'));
+    if (portfolioDetails[index]) portfolioDetails[index].classList.add('active');
+
+    // update disabled state
+    if (arrowLeft) {
+        if (index <= 0) arrowLeft.classList.add('disabled'); else arrowLeft.classList.remove('disabled');
+    }
+    if (arrowRight) {
+        if (index >= portfolioDetails.length - 1) arrowRight.classList.add('disabled'); else arrowRight.classList.remove('disabled');
+    }
 }
 
-arrowRight.addEventListener('click', () => {
-    if(index < 4){
-        index++;
-        arrowLeft.classList.remove('disabled');
-    }
-    else {
-        index =5;
-        arrowRight.classList.add('disabled');
-    }
+if (arrowRight) {
+    arrowRight.addEventListener('click', () => {
+        if (index < (portfolioDetails.length - 1)) index++;
+        activePortfolio();
+    });
+}
 
-    activePortfolio();
-});
+if (arrowLeft) {
+    arrowLeft.addEventListener('click', () => {
+        if (index > 0) index--;
+        activePortfolio();
+    });
+}
 
-arrowLeft.addEventListener('click', () => {
-    if(index > 1){
-        index--;
-        arrowRight.classList.remove('disabled');
-    }
-    else {
-        index =0;
-        arrowLeft.classList.add('disabled');
-    }
-
-    activePortfolio();
-});
+// init portfolio state
+activePortfolio();

@@ -20,12 +20,15 @@
 
 html {
     font-size: 62.5%;
+    scroll-behavior: smooth;
 }
 
 body {
     color: var(--white-color);
+    background: var(--bg-color);
 }
 
+/* HEADER */
 header {
     position: fixed;
     top: 0;
@@ -37,8 +40,8 @@ header {
     justify-content: space-between;
     align-items: center;
     z-index: 100;
-    visibility: hidden;
-    opacity: 0;
+    visibility: visible;
+    opacity: 1;
 }
 
 header.active {
@@ -77,77 +80,47 @@ nav a.active {
     display: none;
 }
 
+/* bars background (kept subtle) */
 .bars-box {
     position: absolute;
     width: 100%;
     height: 100%;
     display: flex;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .bars-box .bar {
     width: 100%;
     height: 100%;
-    background: var(--bg-color);
-    animation: hide-bars .5s ease-in-out both;
-    animation-delay: calc(.1s * var(--i));
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.06));
+    transform: translateY(-100%);
+    /* no persistent animation to avoid interfering with scroll */
 }
 
-@keyframes hide-bars {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-100%);
-    }
-}
-
-.bars-box.active .bar {
-    animation: show-bars .5s ease-in-out both;
-    animation-delay: calc(.1s * var(--i));
-}
-
-@keyframes show-bars {
-    0% {
-        transform: translateY(-100%);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-
+/* SECTIONS - changed for scrolling */
 section {
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 100%;
-    padding: 10rem 9% 2rem;
-    visibility: hidden;
-    opacity: 0;
-    overflow: hidden;
+    min-height: 100vh;
+    padding: 10rem 9% 5rem;
+    visibility: visible;
+    opacity: 1;
+    overflow: visible;
 }
 
-section.active {
-    animation: show-content 1.5s linear forwards;
-    animation-delay: 1.6s; 
-}
-
-@keyframes show-content {
-    100% {
-        visibility: visible;
-        opacity: 1;
-        overflow: auto;
-    }
-}
-
+/* Home */
 .home {
     display: flex;
     align-items: center;
     gap: 5rem;
-
 }
 
 .home-detail h1 {
     font-size: clamp(3.5rem, 10vw, 5.5rem);
+    margin-bottom: 0.5rem;
 }
 
 .home-detail h2 {
@@ -252,6 +225,7 @@ section.active {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    z-index: 1;
 }
 
 .home-img .img-box::before,
@@ -297,6 +271,7 @@ section.active {
     mix-blend-mode: lighten;
 }
 
+/* HEADINGS */
 .heading {
     font-size: 4.5rem;
     text-align: center;
@@ -307,6 +282,7 @@ section.active {
     color: var(--main-color);
 }
 
+/* SERVICES */
 .services-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(30rem,1fr));
@@ -377,6 +353,7 @@ section.active {
     font-size: 1.6rem;
 }
 
+/* RESUME */
 .resume-container {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -540,6 +517,7 @@ section.active {
     font-size: 1.8rem;
 }
 
+/* PORTFOLIO */
 .portfolio-container {
     display: grid;
     grid-template-columns: repeat(2,1fr);
@@ -675,6 +653,7 @@ section.active {
     margin-left: 1.5rem;
 }
 
+/* CONTACT */
 .contact-container {
     display: grid;
     grid-template-columns: 1fr 1.3fr;
