@@ -198,6 +198,12 @@ section {
     margin-left: 2rem;
 }
 
+/* Fix LeetCode icon size */
+.sci a.leetcode-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
 .home-detail .btn-sci .sci a {
     display: inline-flex;
     padding: .8rem;
@@ -208,6 +214,16 @@ section {
     margin: 0 .8rem;
     transition: .1s;
 }
+
+/* LeetCode Icon Hover */
+.sci a svg {
+    transition: 0.3s;
+}
+
+.sci a:hover svg {
+    transform: scale(1.2);
+}
+
 
 .home-detail .btn-sci .sci a:hover {
     background: var(--main-color);
